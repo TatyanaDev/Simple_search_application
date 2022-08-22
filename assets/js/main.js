@@ -2,11 +2,22 @@
 
 const body = document.getElementById('body')
 const ulForHistory = document.createElement('ul')
+ulForHistory.classList.add('ulForHistory')
 const ulForList = document.createElement('ul')
 const input = document.createElement('input')
+const containerHeaders = document.createElement('div')
+const headerHistory = document.createElement('h1')
+headerHistory.innerHTML = 'Search history'
+const clearHistory = document.createElement('button')
+clearHistory.innerHTML = 'Clear search history'
+clearHistory.classList.add('clearHistory')
+
+containerHeaders.appendChild(headerHistory)
+containerHeaders.appendChild(clearHistory)
 
 body.appendChild(input)
 body.appendChild(ulForList)
+body.appendChild(containerHeaders)
 body.appendChild(ulForHistory)
 
 const history = []
@@ -42,7 +53,7 @@ input.addEventListener('change', ({ target: { value } }) => {
   if (value.length) {
     const liForHistory = document.createElement('li')
     const buttonForDelete = document.createElement('button')
-    buttonForDelete.classList.add('buttonForDelete')
+    buttonForDelete.classList.add('buttonForDeleteHistoryItems')
     liForHistory.id = id
     buttonForDelete.id = id
     buttonForDelete.innerHTML = 'X'
@@ -51,5 +62,12 @@ input.addEventListener('change', ({ target: { value } }) => {
     ulForHistory.appendChild(liForHistory)
   }
 
-  document.querySelectorAll('.buttonForDelete').forEach(button => button.addEventListener('click', ({ target: { id } }) => document.getElementById(id).remove()))
+  document.querySelectorAll('.buttonForDeleteHistoryItems').forEach(button => button.addEventListener('click', ({ target: { id } }) => document.getElementById(id).remove()))
+})
+
+document.querySelector('.clearHistory').addEventListener('click', () => {
+  const containerHistory = document.querySelector('.ulForHistory')
+  while (containerHistory.firstChild) {
+    containerHistory.removeChild(containerHistory.firstChild)
+  }
 })
