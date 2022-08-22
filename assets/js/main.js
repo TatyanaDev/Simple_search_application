@@ -1,24 +1,41 @@
 'use strict'
 
 const body = document.getElementById('body')
+
+const containerHeaders = document.createElement('div')
+const clearHistory = document.createElement('button')
+const wrapperHistory = document.createElement('div')
+const headerHistory = document.createElement('h1')
 const ulForHistory = document.createElement('ul')
-ulForHistory.classList.add('ulForHistory')
+const wrapperList = document.createElement('div')
+const container = document.createElement('div')
 const ulForList = document.createElement('ul')
 const input = document.createElement('input')
-const containerHeaders = document.createElement('div')
-const headerHistory = document.createElement('h1')
-headerHistory.innerHTML = 'Search history'
-const clearHistory = document.createElement('button')
-clearHistory.innerHTML = 'Clear search history'
+
+containerHeaders.classList.add('containerHeaders')
+headerHistory.classList.add('headerHistory')
+ulForHistory.classList.add('ulForHistory')
 clearHistory.classList.add('clearHistory')
+container.classList.add('container')
+ulForList.classList.add('ulForList')
+input.classList.add('input')
+
+clearHistory.innerHTML = 'Clear search history'
+headerHistory.innerHTML = 'Search history'
+
+wrapperList.appendChild(input)
+wrapperList.appendChild(ulForList)
 
 containerHeaders.appendChild(headerHistory)
 containerHeaders.appendChild(clearHistory)
 
-body.appendChild(input)
-body.appendChild(ulForList)
-body.appendChild(containerHeaders)
-body.appendChild(ulForHistory)
+wrapperHistory.appendChild(containerHeaders)
+wrapperHistory.appendChild(ulForHistory)
+
+container.appendChild(wrapperList)
+container.appendChild(wrapperHistory)
+
+body.appendChild(container)
 
 const history = []
 
@@ -51,14 +68,28 @@ input.addEventListener('change', ({ target: { value } }) => {
   history.push({ id, value })
 
   if (value.length) {
-    const liForHistory = document.createElement('li')
     const buttonForDelete = document.createElement('button')
+    const wrapperTimestamp = document.createElement('span')
+    const itemHistory = document.createElement('span')
+    const liForHistory = document.createElement('li')
+    const timestamp = document.createElement('span')
+
     buttonForDelete.classList.add('buttonForDeleteHistoryItems')
+    liForHistory.classList.add('liForHistory')
+
+    timestamp.innerHTML = `${new Date().toLocaleString('en')}`
+    itemHistory.innerHTML = `${value}`
+    buttonForDelete.innerHTML = 'X'
+
     liForHistory.id = id
     buttonForDelete.id = id
-    buttonForDelete.innerHTML = 'X'
-    liForHistory.innerHTML = `${value} ${new Date().toLocaleString('en')}`
-    liForHistory.appendChild(buttonForDelete)
+ 
+    liForHistory.appendChild(itemHistory)
+    liForHistory.appendChild(wrapperTimestamp)
+
+    wrapperTimestamp.appendChild(timestamp)
+    wrapperTimestamp.appendChild(buttonForDelete)
+
     ulForHistory.appendChild(liForHistory)
   }
 
