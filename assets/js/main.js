@@ -1,13 +1,13 @@
 'use strict'
 
-const containerForHistory = document.createElement('div')
 const body = document.getElementById('body')
+const ulForHistory = document.createElement('ul')
 const ulForList = document.createElement('ul')
 const input = document.createElement('input')
 
 body.appendChild(input)
 body.appendChild(ulForList)
-body.appendChild(containerForHistory)
+body.appendChild(ulForHistory)
 
 const history = []
 
@@ -23,13 +23,14 @@ const history = []
 
   posts.forEach(post => {
     const liForList = document.createElement('li')
+    liForList.classList.add('liForList')
     liForList.innerHTML = post
     ulForList.appendChild(liForList)
   })
 })()
 
 input.addEventListener('change', ({ target: { value } }) => {
-  const list = document.querySelectorAll('li')
+  const list = document.querySelectorAll('.liForList')
   const id = Date.now()
 
   for (let i = 0; i < list.length; i++) {
@@ -39,15 +40,16 @@ input.addEventListener('change', ({ target: { value } }) => {
   history.push({ id, value })
 
   if (value.length) {
-    const itemHistory = document.createElement('div')
+    const liForHistory = document.createElement('li')
     const buttonForDelete = document.createElement('button')
-    itemHistory.id = id
+    buttonForDelete.classList.add('buttonForDelete')
+    liForHistory.id = id
     buttonForDelete.id = id
     buttonForDelete.innerHTML = 'X'
-    itemHistory.innerHTML = `${value} ${new Date().toLocaleString('en')}`
-    itemHistory.appendChild(buttonForDelete)
-    containerForHistory.appendChild(itemHistory)
+    liForHistory.innerHTML = `${value} ${new Date().toLocaleString('en')}`
+    liForHistory.appendChild(buttonForDelete)
+    ulForHistory.appendChild(liForHistory)
   }
 
-  document.querySelectorAll('button').forEach(button => button.addEventListener('click', ({ target: { id } }) => document.getElementById(id).remove()))
+  document.querySelectorAll('.buttonForDelete').forEach(button => button.addEventListener('click', ({ target: { id } }) => document.getElementById(id).remove()))
 })
