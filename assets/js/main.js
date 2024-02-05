@@ -1,104 +1,68 @@
-'use strict'
+"use strict";
 
-const body = document.getElementById('body')
+const autocompleteResults = document.getElementById("autocomplete-results");
+const searchHistoryList = document.getElementById("search-history");
+const clearHistory = document.getElementById("clear-history");
+const searchInput = document.getElementById("search-input");
 
-const containerHeaders = document.createElement('div')
-const clearHistory = document.createElement('button')
-const wrapperHistory = document.createElement('div')
-const headerHistory = document.createElement('h1')
-const ulForHistory = document.createElement('ul')
-const wrapperList = document.createElement('div')
-const container = document.createElement('div')
-const ulForList = document.createElement('ul')
-const input = document.createElement('input')
+let searchHistory = [];
 
-containerHeaders.classList.add('containerHeaders')
-headerHistory.classList.add('headerHistory')
-ulForHistory.classList.add('ulForHistory')
-clearHistory.classList.add('clearHistory')
-container.classList.add('container')
-ulForList.classList.add('ulForList')
-input.classList.add('input')
+searchInput.addEventListener("input", () => {
+  const query = searchInput.value;
 
-clearHistory.innerHTML = 'Clear search history'
-headerHistory.innerHTML = 'Search history'
+  if (query.length < 1) {
+    autocompleteResults.innerHTML = "";
 
-wrapperList.appendChild(input)
-wrapperList.appendChild(ulForList)
-
-containerHeaders.appendChild(headerHistory)
-containerHeaders.appendChild(clearHistory)
-
-wrapperHistory.appendChild(containerHeaders)
-wrapperHistory.appendChild(ulForHistory)
-
-container.appendChild(wrapperList)
-container.appendChild(wrapperHistory)
-
-body.appendChild(container)
-
-const history = []
-
-;(async () => {
-  const obj = await fetch('https://jsonplaceholder.typicode.com/albums')
-  const data = await obj.json()
-
-  const posts = []
-
-  for (let i = 0; i < data.length; i++) {
-    posts.push(data[i].title)
+    return;
   }
 
-  posts.forEach(post => {
-    const liForList = document.createElement('li')
-    liForList.classList.add('liForList')
-    liForList.innerHTML = post
-    ulForList.appendChild(liForList)
-  })
-})()
+  fetch(`https://jsonplaceholder.typicode.com/albums?_&q=${encodeURIComponent(query)}`)
+    .then((res) => res.json())
+    .then((data) =>
+        (autocompleteResults.innerHTML = data
+          .map(({ title }) => `<li class="result-item">${title}</li>`)
+          .join("")))
+    .catch((err) => console.error("Error fetching data:", err));
+});
 
-input.addEventListener('change', ({ target: { value } }) => {
-  const list = document.querySelectorAll('.liForList')
-  const id = Date.now()
+const renderSearchHistory = () =>
+  (searchHistoryList.innerHTML = searchHistory
+    .map((item, index) =>
+        `<li class="history-container">
+          <p class="history-item">${item.title}</p>
+          <span class="history-item-info">
+            <p>${item.timestamp}</p>
+            <button onclick="deleteHistoryItem(${index})" class="delete-button">X</button>
+          </span>
+        </li>`)
+    .join(""));
 
-  for (let i = 0; i < list.length; i++) {
-    list[i].textContent.toLowerCase().indexOf(value.toLowerCase()) === 0 ? (list[i].style.display = 'block') : (list[i].style.display = 'none')
+const addSearchHistory = (title) => {
+  const timestamp = new Date().toLocaleString("ru");
+
+  searchHistory.push({ title, timestamp });
+
+  renderSearchHistory();
+};
+
+autocompleteResults.addEventListener("click", ({ target }) => {
+  if (target.tagName === "LI") {
+    addSearchHistory(target.textContent);
+
+    searchInput.value = "";
+
+    autocompleteResults.innerHTML = "";
   }
+});
 
-  history.push({ id, value })
+clearHistory.addEventListener("click", () => {
+  searchHistory = [];
 
-  if (value.length) {
-    const buttonForDelete = document.createElement('button')
-    const wrapperTimestamp = document.createElement('span')
-    const itemHistory = document.createElement('span')
-    const liForHistory = document.createElement('li')
-    const timestamp = document.createElement('span')
+  renderSearchHistory();
+});
 
-    buttonForDelete.classList.add('buttonForDeleteHistoryItems')
-    liForHistory.classList.add('liForHistory')
+const deleteHistoryItem = (index) => {
+  searchHistory.splice(index, 1);
 
-    timestamp.innerHTML = `${new Date().toLocaleString('en')}`
-    itemHistory.innerHTML = `${value}`
-    buttonForDelete.innerHTML = 'X'
-
-    liForHistory.id = id
-    buttonForDelete.id = id
- 
-    liForHistory.appendChild(itemHistory)
-    liForHistory.appendChild(wrapperTimestamp)
-
-    wrapperTimestamp.appendChild(timestamp)
-    wrapperTimestamp.appendChild(buttonForDelete)
-
-    ulForHistory.appendChild(liForHistory)
-  }
-
-  document.querySelectorAll('.buttonForDeleteHistoryItems').forEach(button => button.addEventListener('click', ({ target: { id } }) => document.getElementById(id).remove()))
-})
-
-document.querySelector('.clearHistory').addEventListener('click', () => {
-  const containerHistory = document.querySelector('.ulForHistory')
-  while (containerHistory.firstChild) {
-    containerHistory.removeChild(containerHistory.firstChild)
-  }
-})
+  renderSearchHistory();
+};

@@ -1,110 +1,104 @@
 * {
-  font-family: sans-serif;
   box-sizing: border-box;
-  list-style: none;
   padding: 0;
   margin: 0;
 }
 
 body {
-  background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
   justify-content: center;
+  font-family: sans-serif;
+  background: #d8d8d8;
   min-height: 100vh;
+  padding: 20px;
   display: flex;
+}
+
+li {
+  list-style: none;
 }
 
 .container {
-  justify-content: space-between;
-  margin-top: 150px;
-  min-width: 900px;
-  display: flex;
+  width: 600px;
 }
 
-.input {
-  margin-bottom: 15px;
-  padding: 0px 10px;
-  min-height: 35px;
-  min-width: 453px;
-  font-size: 2vh;
+.search-container {
+  margin-bottom: 220px;
+  position: relative;
   width: 100%;
 }
 
-.containerHeaders {
-  display: flex;
+.search-input {
+  border: 2px solid #a9a9a9;
+  margin-bottom: 5px;
+  min-width: 300px;
+  font-size: 20px;
+  padding: 10px;
 }
 
-.headerHistory {
-  margin-bottom: 10px;
-  margin-right: 20px;
-  min-height: 35px;
-  font-size: 3vh;
+.search-input::placeholder {
+  color: #a9a9a9;
 }
 
-.clearHistory {
-  border: 2px solid black;
-  border-radius: 5px;
-  padding: 0px 10px;
-  max-height: 25px;
+.autocomplete-results {
+  border: 2px solid #a9a9a9;
+  background: #ffffff;
+  position: absolute;
+  max-height: 200px;
+  overflow: auto;
+  width: 100%;
+  z-index: 1;
+}
+
+.result-item {
+  padding: 10px 15px;
   cursor: pointer;
 }
 
-.liForList,
-.liForHistory {
+.search-history-title-container {
+  border-bottom: 1px solid #a9a9a9;
   justify-content: space-between;
+  padding-bottom: 20px;
+  align-items: center;
   display: flex;
 }
 
-.ulForList > li,
-.liForHistory {
-  border-bottom: 1px dashed black;
-  padding-bottom: 5px;
-  margin-bottom: 5px;
+.clear-history {
+  text-decoration: underline;
+  text-align: end;
+  cursor: pointer;
 }
 
-.buttonForDeleteHistoryItems {
-  border: 2px solid black;
-  border-radius: 5px;
-  padding: 2px 5px;
-  margin-left: 5px;
+.history-container {
+  border-bottom: 1px solid #a9a9a9;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0px;
+  display: flex;
 }
 
-@media screen and (max-width: 992px) {
-  * {
-    font-size: 4vh;
-  }
-
-  body {
-    display: block;
-  }
-
-  .container {
-    display: block;
-  }
-
-  .input {
-    min-height: 55px;
-    font-size: 4vh;
-  }
-
-  .container > div,
-  .container > input {
-    max-width: 488px;
-    margin: 0 auto;
-  }
-
-  .containerHeaders {
-    justify-content: space-between;
-    margin-top: 20px;
-  }
-
-  .clearHistory {
-    font-size: 3vh;
-  }
+.history-item {
+  max-width: 350px;
 }
 
-@media screen and (max-width: 768px) {
-  .container > div,
-  .container > input {
-    max-width: 600px;
+.history-item-info {
+  align-items: center;
+  color: #a9a9a9;
+  display: flex;
+}
+
+.delete-button {
+  background: transparent;
+  margin-left: 10px;
+  color: #a9a9a9;
+  cursor: pointer;
+  font-size: 20px;
+  border: none;
+  height: 20px;
+  width: 20px;
+}
+
+@media screen and (max-width: 720px) {
+  .history-item-info {
+    max-width: 110px;
   }
 }
